@@ -6,6 +6,7 @@ use App\Repository\BookRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
@@ -18,11 +19,16 @@ class Book
     #[ORM\Column(length: 255)]
     private ?string $titre = null;
 
-    #[ORM\ManyToOne(inversedBy: 'books')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $auteur = null;
-
     #[ORM\Column(length: 255)]
+    private ?string $auteur = null;
+
+    #[ORM\Column(length: 10)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 10, max: 10)]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z0-9\-]{10}$/',
+        message: 'L\'ISBN doit contenir exactement 10 caractères : lettres, chiffres ou tirets.'
+    )]
     private ?string $isbn = null;
 
     /**
@@ -30,6 +36,10 @@ class Book
      */
     #[ORM\ManyToMany(targetEntity: Category::class, mappedBy: 'books')]
     private Collection $categories;
+
+    #[ORM\ManyToOne(inversedBy: 'books')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -53,12 +63,12 @@ class Book
         return $this;
     }
 
-    public function getAuteur(): ?User
+    public function getAuteur(): ?string
     {
         return $this->auteur;
     }
 
-    public function setAuteur(?User $auteur): static
+    public function setAuteur(string $auteur): static
     {
         $this->auteur = $auteur;
 
@@ -100,6 +110,18 @@ class Book
         if ($this->categories->removeElement($category)) {
             $category->removeBook($this);
         }
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

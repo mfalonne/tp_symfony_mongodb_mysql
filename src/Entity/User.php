@@ -33,10 +33,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+
+    #[ORM\Column(length: 255)]
+    private ?string $nom = null;
+
     /**
      * @var Collection<int, Book>
      */
-    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'auteur')]
+    #[ORM\OneToMany(targetEntity: Book::class, mappedBy: 'user')]
     private Collection $books;
 
     public function __construct()
@@ -117,6 +121,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Book>
      */
@@ -129,7 +145,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->books->contains($book)) {
             $this->books->add($book);
-            $book->setAuteur($this);
+            $book->setUser($this);
         }
 
         return $this;
@@ -139,8 +155,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->books->removeElement($book)) {
             // set the owning side to null (unless already changed)
-            if ($book->getAuteur() === $this) {
-                $book->setAuteur(null);
+            if ($book->getUser() === $this) {
+                $book->setUser(null);
             }
         }
 
