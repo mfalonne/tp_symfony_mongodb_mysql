@@ -51,4 +51,27 @@ class BookRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findByFilters(array $filters): array
+    {
+        $qb = $this->createQueryBuilder('b');
+
+        if (!empty($filters['titre'])) {
+            $qb->andWhere('LOWER(b.titre) LIKE :titre')
+                ->setParameter('titre', '%' . strtolower($filters['titre']) . '%');
+        }
+
+        if (!empty($filters['auteur'])) {
+            $qb->andWhere('LOWER(b.auteur) LIKE :auteur')
+                ->setParameter('auteur', '%' . strtolower($filters['auteur']) . '%');
+        }
+
+        if (!empty($filters['categorie'])) {
+            $qb->join('b.categories', 'c')
+                ->andWhere('LOWER(c.name) LIKE :categorie')
+                ->setParameter('categorie', '%' . strtolower($filters['categorie']) . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
 }

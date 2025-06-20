@@ -18,7 +18,10 @@ services:
         alias: App\Service\Category\CategoryManager
     App\Service\User\UserManagerInterface:
         alias: App\Service\User\UserManager
-
+    App\Repository\ReviewRepository:
+        factory: [ '@doctrine_mongodb.odm.document_manager', getRepository ]
+        arguments:
+            - App\Document\Review
 
 
     # makes classes in src/ available to be used as services

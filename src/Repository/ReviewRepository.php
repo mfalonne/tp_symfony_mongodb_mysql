@@ -7,7 +7,7 @@ use App\Document\Review;
 class ReviewRepository extends DocumentRepository
 {
     /**
-     * Exemple : récupérer les reviews par note minimale
+     * Récupérer les reviews par note minimale
      */
     public function findByMinRating(int $minRating): array
     {
@@ -16,5 +16,22 @@ class ReviewRepository extends DocumentRepository
             ->getQuery()
             ->execute()
             ->toArray();
+    }
+
+    /**
+     * Calcul la moyenne des Ratings
+     */
+    public function getAverageRating(): ?float
+    {
+        $aggregation = $this->createAggregationBuilder();
+
+        $result = $aggregation
+            ->group()
+            ->field('_id')->expression(null)
+            ->field('average')->avg('$rating')
+            ->execute()
+            ->toArray();
+
+        return isset($result[0]['average']) ? round($result[0]['average'], 2) : null;
     }
 }

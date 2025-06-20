@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Repository\ReviewRepository;
 class ReviewController extends AbstractController
 {
     public function __construct(private ReviewManagerInterface $reviewManager)
@@ -48,5 +49,15 @@ class ReviewController extends AbstractController
         }
 
         return $this->render('review/create.html.twig');
+    }
+
+    #[Route('/reviews/average', name: 'review_average')]
+    public function average(ReviewRepository $reviewRepository): Response
+    {
+        $average = $reviewRepository->getAverageRating();
+
+        return $this->render('review/average.html.twig', [
+            'average' => $average,
+        ]);
     }
 }

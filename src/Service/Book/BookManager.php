@@ -17,6 +17,11 @@ class BookManager implements BookManagerInterface
         return $this->bookRepository->findAll();
     }
 
+    public function getById(int $id): ?Book
+    {
+        return $this->bookRepository->find($id);
+    }
+
     public function create(Book $book): Book
     {
         $this->em->persist($book);

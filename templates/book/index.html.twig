@@ -1,25 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Mes livres{% endblock %}
+{% block title %}Liste des livres{% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1>Liste des livres</h1>
+    <h1 class="mb-4">Liste des Livres</h1>
 
-        {% if books is empty %}
-            <p>Aucun livre pour l'instant.</p>
+    <a href="{{ path('book_new') }}" class="btn btn-success mb-3">+ Ajouter un livre</a>
+
+    <form method="get" class="row g-2 mb-4">
+        <div class="col-md-3">
+            <input type="text" name="titre" value="{{ filters.titre }}" class="form-control" placeholder="Filtrer par titre">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="auteur" value="{{ filters.auteur }}" class="form-control" placeholder="Filtrer par auteur">
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="categorie" value="{{ filters.categorie }}" class="form-control" placeholder="Filtrer par catégorie">
+        </div>
+        <div class="col-md-3">
+            <button class="btn btn-primary w-100">Filtrer</button>
+        </div>
+    </form>
+
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+        <tr>
+            <th>Titre</th>
+            <th>Auteur</th>
+            <th>Catégories</th>
+            <th>ISBN</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for book in books %}
+            <tr>
+                <td>{{ book.titre }}</td>
+                <td>{{ book.auteur }}</td>
+                <td>
+                    {% for cat in book.categories %}
+                        <span class="badge bg-secondary">{{ cat.name }}</span>
+                    {% endfor %}
+                </td>
+                <td>{{ book.isbn }}</td>
+                <td>
+                    <a href="{{ path('book_show', {id: book.id}) }}" class="btn btn-sm btn-outline-primary" title="Voir">
+                        <i class="bi bi-eye"></i>
+                    </a>
+                    <a href="{{ path('book_edit', {id: book.id}) }}" class="btn btn-sm btn-outline-success" title="Modifier">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <form method="post" action="{{ path('book_delete', {id: book.id}) }}" style="display:inline-block;" onsubmit="return confirm('Supprimer ce livre ?');">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button class="btn btn-sm btn-outline-danger" title="Supprimer">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </form>
+                </td>
+            </tr>
         {% else %}
-            <ul>
-                {% for book in books %}
-                    <li>
-                        <strong>{{ book.title }}</strong>
-                        {% if book.auteur %}
-                            - Auteur : {{ book.auteur }}
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-    </div>
+            <tr>
+                <td colspan="5">Aucun livre trouvé.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
-

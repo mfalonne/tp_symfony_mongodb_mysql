@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détail du livre{% endblock %}
+
+{% block body %}
+    <h1>{{ book.titre }}</h1>
+    <p><strong>Auteur :</strong> {{ book.auteur }}</p>
+    <p><strong>ISBN :</strong> {{ book.isbn }}</p>
+    <p><strong>Catégories :</strong>
+        {% for cat in book.categories %}
+            {{ cat.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    </p>
+    <a href="{{ path('book_list') }}" class="btn btn-secondary">← Retour à la liste</a>
+{% endblock %}
