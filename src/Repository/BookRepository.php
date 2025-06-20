@@ -40,4 +40,15 @@ class BookRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findByCategory(string $categoryName): array
+    {
+        return $this->createQueryBuilder('b')
+            ->join('b.categories', 'c')
+            ->andWhere('c.name = :name')
+            ->setParameter('name', $categoryName)
+            ->getQuery()
+            ->getResult();
+    }
+
 }
