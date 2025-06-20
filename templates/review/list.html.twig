@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Review{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Liste des avis</h1>
+
+        <form method="get" action="{{ path('review_list') }}">
+            <label for="minRating">Note minimale:</label>
+            <input type="number" name="minRating" id="minRating" value="{{ minRating }}">
+            <button type="submit">Filtrer</button>
+        </form>
+
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    Note : {{ review.rating }} <br>
+                    Contenu : {{ review.content }} <br>
+                    Date : {{ review.createdAt|date('d/m/Y H:i') }}
+                </li>
+            {% else %}
+                <li>Aucun avis trouvé.</li>
+            {% endfor %}
+        </ul>
+
+        <a href="{{ path('review_create') }}">Ajouter un avis</a>
+    </div>
+{% endblock %}

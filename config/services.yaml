@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    env(MONGODB_URL): ''
+    env(MONGODB_DB): ''
 
 services:
     # default configuration for services in *this* file
@@ -16,6 +18,7 @@ services:
         alias: App\Service\Category\CategoryManager
     App\Service\User\UserManagerInterface:
         alias: App\Service\User\UserManager
+
 
 
     # makes classes in src/ available to be used as services

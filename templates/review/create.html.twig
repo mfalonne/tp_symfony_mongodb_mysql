@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creer Review{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Ajouter un avis</h1>
+
+        <form method="post" action="{{ path('review_create') }}">
+            <label for="content">Contenu :</label><br>
+            <textarea name="content" id="content" required></textarea><br>
+
+            <label for="rating">Note (1-5) :</label><br>
+            <input type="number" name="rating" id="rating" min="1" max="5" required><br>
+
+            <button type="submit">Enregistrer</button>
+        </form>
+
+        <a href="{{ path('review_list') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
